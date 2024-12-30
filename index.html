@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rechner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .calculator {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 450px;
+        }
+        .display {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: right;
+            background-color: #f9f9f9;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .buttons button {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .buttons button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: left;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .result-item span:last-child {
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>Preisrechner</h2>
+        <div id="display" class="display">0</div>
+        <div class="buttons">
+            <button onclick="appendNumber(7)">7</button>
+            <button onclick="appendNumber(8)">8</button>
+            <button onclick="appendNumber(9)">9</button>
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendNumber(4)">4</button>
+            <button onclick="appendNumber(5)">5</button>
+            <button onclick="appendNumber(6)">6</button>
+            <button onclick="backspace()">←</button>
+            <button onclick="appendNumber(1)">1</button>
+            <button onclick="appendNumber(2)">2</button>
+            <button onclick="appendNumber(3)">3</button>
+            <button onclick="calculate()">=</button>
+            <button onclick="appendNumber(0)" style="grid-column: span 2;">0</button>
+            <button onclick="appendDot()">.</button>
+        </div>
+        <div class="result" id="result">
+            <div class="result-item"><span>Auktionskosten</span><span id="auctionCost">+20%: 0.00 €</span></div>
+            <div class="result-item"><span>MwSt. auf die Auktionskosten</span><span id="taxCost">+19%: 0.00 €</span></div>
+            <div class="result-item"><span>Summe</span><span id="totalCost">0.00 €</span></div>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = "0";
+
+        function updateDisplay() {
+            document.getElementById('display').textContent = currentInput;
+        }
+
+        function appendNumber(num) {
+            if (currentInput === "0") {
+                currentInput = "" + num;
+            } else {
+                currentInput += num;
+            }
+            updateDisplay();
+        }
+
+        function appendDot() {
+            if (!currentInput.includes(".")) {
+                currentInput += ".";
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = "0";
+            document.getElementById('auctionCost').textContent = "+20%: 0.00 €";
+            document.getElementById('taxCost').textContent = "+19%: 0.00 €";
+            document.getElementById('totalCost').textContent = "0.00 €";
+            updateDisplay();
+        }
+
+        function backspace() {
+            currentInput = currentInput.slice(0, -1) || "0";
+            updateDisplay();
+        }
+
+        function calculate() {
+            const price = parseFloat(currentInput);
+            if (isNaN(price) || price < 0) {
+                alert('Bitte einen gültigen Preis eingeben.');
+                return;
+            }
+
+            const auctionCost = price * 0.20;
+            const taxCost = auctionCost * 0.19;
+            const total = price + auctionCost + taxCost;
+
+            document.getElementById('auctionCost').textContent = `+20%: ${auctionCost.toFixed(2)} €`;
+            document.getElementById('taxCost').textContent = `+19%: ${taxCost.toFixed(2)} €`;
+            document.getElementById('totalCost').textContent = `${total.toFixed(2)} €`;
+
+            currentInput = total.toFixed(2);
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>
