@@ -139,8 +139,8 @@
             const taxCost = auctionCost * 0.20;
             const total = price + auctionCost + taxCost;
 
-            document.getElementById('auctionCost').textContent = `+20%: ${auctionCost.toFixed(2)} €`;
-            document.getElementById('taxCost').textContent = `+19%: ${taxCost.toFixed(2)} €`;
+            document.getElementById('auctionCost').textContent = `+19%: ${auctionCost.toFixed(2)} €`;
+            document.getElementById('taxCost').textContent = `+20%: ${taxCost.toFixed(2)} €`;
             document.getElementById('totalCost').textContent = `${total.toFixed(2)} €`;
 
             currentInput = total.toFixed(2);
