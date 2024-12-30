@@ -86,8 +86,8 @@
             <button onclick="appendDot()">.</button>
         </div>
         <div class="result" id="result">
-            <div class="result-item"><span>Auktionskosten</span><span id="auctionCost">+20%: 0.00 €</span></div>
-            <div class="result-item"><span>MwSt. auf die Auktionskosten</span><span id="taxCost">+19%: 0.00 €</span></div>
+            <div class="result-item"><span>Auktionskosten</span><span id="auctionCost">+19%: 0.00 €</span></div>
+            <div class="result-item"><span>MwSt. auf die Auktionskosten</span><span id="taxCost">+20%: 0.00 €</span></div>
             <div class="result-item"><span>Summe</span><span id="totalCost">0.00 €</span></div>
         </div>
     </div>
@@ -117,8 +117,8 @@
 
         function clearDisplay() {
             currentInput = "0";
-            document.getElementById('auctionCost').textContent = "+20%: 0.00 €";
-            document.getElementById('taxCost').textContent = "+19%: 0.00 €";
+            document.getElementById('auctionCost').textContent = "+19%: 0.00 €";
+            document.getElementById('taxCost').textContent = "+20%: 0.00 €";
             document.getElementById('totalCost').textContent = "0.00 €";
             updateDisplay();
         }
