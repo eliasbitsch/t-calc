@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
             margin: 0;
             background-color: #f4f4f4;
         }
+
         .calculator {
             background: #fff;
             padding: 20px;
@@ -22,6 +24,7 @@
             text-align: center;
             width: 450px;
         }
+
         .display {
             width: 90%;
             padding: 10px;
@@ -32,11 +35,13 @@
             text-align: right;
             background-color: #f9f9f9;
         }
+
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
+
         .buttons button {
             padding: 15px;
             font-size: 1.2rem;
@@ -46,25 +51,33 @@
             color: white;
             cursor: pointer;
         }
+
         .buttons button:hover {
             background-color: #0056b3;
         }
+
         .result {
             margin-top: 20px;
             font-size: 1.2rem;
             text-align: left;
         }
+
         .result-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
+            padding-bottom: 5px;
+            /* Abstand zwischen Text und Linie */
+            border-bottom: 1.5px solid #ddd;
+            /* Dünne graue Linie */
         }
-        .result-item span:last-child {
-            font-weight: bold;
-            font-size: 1.4rem;
+
+        .result-item:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
+
 <body>
     <div class="calculator">
         <h2>Preisrechner</h2>
@@ -85,10 +98,15 @@
             <button onclick="appendNumber(0)" style="grid-column: span 2;">0</button>
             <button onclick="appendDot()">.</button>
         </div>
-        <div class="result" id="result">
-            <div class="result-item"><span>Auktionskosten</span><span id="auctionCost">+19%: 0.00 €</span></div>
-            <div class="result-item"><span>MwSt. auf die Auktionskosten</span><span id="taxCost">+20%: 0.00 €</span></div>
-            <div class="result-item"><span>Summe</span><span id="totalCost">0.00 €</span></div>
+        <div class="result">
+            <div class="result-item"><span>MwSt. (20% auf den Preis):</span><span id="taxOnPrice">0.00 €</span></div>
+            <div class="result-item"><span>Auktionsgebühr (19% vom Preis):</span><span id="auctionFee">0.00 €</span>
+            </div>
+            <div class="result-item"><span>MwSt. (20% auf Auktionsgebühr):</span><span id="taxOnFee">0.00 €</span></div>
+            <div class="result-item"><strong>Gesamtsumme (Brutto):</strong><strong id="totalCost">0.00 €</strong></div>
+            <div class="result-item"><span>MwSt. gesamt:</span><span id="deductibleTaxes">0.00 €</span></div>
+            <div class="result-item"><strong>Tatsächliche Belastung (Netto):</strong><strong id="actualCost">0.00
+                    €</strong></div>
         </div>
     </div>
 
@@ -96,7 +114,7 @@
         let currentInput = "0";
 
         function updateDisplay() {
-            document.getElementById('display').textContent = currentInput;
+            document.getElementById('display').textContent = formatNumber(currentInput);
         }
 
         function appendNumber(num) {
@@ -109,17 +127,20 @@
         }
 
         function appendDot() {
-            if (!currentInput.includes(".")) {
-                currentInput += ".";
+            if (!currentInput.includes(",")) {
+                currentInput += ",";
             }
             updateDisplay();
         }
 
         function clearDisplay() {
             currentInput = "0";
-            document.getElementById('auctionCost').textContent = "+19%: 0.00 €";
-            document.getElementById('taxCost').textContent = "+20%: 0.00 €";
-            document.getElementById('totalCost').textContent = "0.00 €";
+            document.getElementById('taxOnPrice').textContent = "0,00 €";
+            document.getElementById('auctionFee').textContent = "0,00 €";
+            document.getElementById('taxOnFee').textContent = "0,00 €";
+            document.getElementById('totalCost').textContent = "0,00 €";
+            document.getElementById('deductibleTaxes').textContent = "0,00 €";
+            document.getElementById('actualCost').textContent = "0,00 €";
             updateDisplay();
         }
 
@@ -129,23 +150,36 @@
         }
 
         function calculate() {
-            const price = parseFloat(currentInput);
+            const price = parseFloat(currentInput.replace(",", "."));
             if (isNaN(price) || price < 0) {
                 alert('Bitte einen gültigen Preis eingeben.');
                 return;
             }
 
-            const auctionCost = price * 0.19;
-            const taxCost = auctionCost * 0.20;
-            const total = price + auctionCost + taxCost;
+            const taxOnPrice = price * 0.20;
+            const auctionFee = price * 0.19;
+            const taxOnFee = auctionFee * 0.20;
+            const total = price + taxOnPrice + auctionFee + taxOnFee;
 
-            document.getElementById('auctionCost').textContent = `+19%: ${auctionCost.toFixed(2)} €`;
-            document.getElementById('taxCost').textContent = `+20%: ${taxCost.toFixed(2)} €`;
-            document.getElementById('totalCost').textContent = `${total.toFixed(2)} €`;
+            const totalTaxDeductible = taxOnPrice + taxOnFee;
+            const actualCost = price + auctionFee;
 
-            currentInput = total.toFixed(2);
-            updateDisplay();
+            document.getElementById('taxOnPrice').textContent = `${formatNumber(taxOnPrice.toFixed(2))} €`;
+            document.getElementById('auctionFee').textContent = `${formatNumber(auctionFee.toFixed(2))} €`;
+            document.getElementById('taxOnFee').textContent = `${formatNumber(taxOnFee.toFixed(2))} €`;
+            document.getElementById('totalCost').textContent = `${formatNumber(total.toFixed(2))} €`;
+            document.getElementById('deductibleTaxes').textContent = `${formatNumber(totalTaxDeductible.toFixed(2))} €`;
+            document.getElementById('actualCost').textContent = `${formatNumber(actualCost.toFixed(2))} €`;
+        }
+
+        function formatNumber(num) {
+            return num
+                .toString()
+                .replace(".", ",") // Dezimalpunkt durch Komma ersetzen
+                .replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Tausendertrennung mit Punkt
         }
     </script>
+
 </body>
+
 </html>
