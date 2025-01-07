@@ -2,6 +2,10 @@
 
 A simple and responsive web-based calculator designed for calculating prices, taxes, and auction fees with a user-friendly interface. Perfect for entrepreneurs who want to calculate gross, net amounts, and deductible taxes.
 
+#### Website: (https://eliasbitsch.github.io/t-calc/)
+
+---
+
 ## 🚀 Features
 - **Tax Calculation**:
   - Calculates 20% VAT on the base price.
